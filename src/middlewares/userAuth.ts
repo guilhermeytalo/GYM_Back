@@ -2,7 +2,7 @@ import { db } from '../models';
 
 const User = db.users;
 
-const saveUser = async (req,res, next) => {
+export const saveUser = async (req,res, next) => {
     try{
         const userName = await User.findOne({
             where: {
