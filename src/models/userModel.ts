@@ -1,19 +1,34 @@
-module.exports = (sequelize: any, DataTypes: any) => {
-    const User = sequelize.define('user',{
-        userName: {
-            type: DataTypes.STRING,
-            allowNull: false,
+import { DataTypes, Sequelize } from 'sequelize';
+
+interface UserProps {
+  userName: string;
+  email: string;
+  password: string;
+}
+
+module.exports = (sequelize: Sequelize) => {
+  const User = sequelize.define(
+    'User',
+    {
+      userName: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      email: {
+        type: DataTypes.STRING,
+        unique: true,
+        validate: {
+          isEmail: true,
         },
-        email: {
-            type: DataTypes.STRING,
-            unique: true,
-            isEmail: true,
-            allowNull: false,
-        },
-        password: {
-            type: DataTypes.STRING,
-            allowNull: false,
-        },
-    }, {timestamps: true})
-    return User;
+        allowNull: false,
+      },
+      password: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+    },
+    { timestamps: true }
+  );
+
+  return User;
 };

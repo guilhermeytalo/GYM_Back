@@ -1,12 +1,13 @@
 import { db } from '../models';
 import bcrypt from 'bcrypt';
+import { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 
 const User = db.users;
 
 //signing a user up
 
-const signup = async (req, res) => {
+export const signup = async (req: Request, res: Response) => {
   try {
     const { userName, email, password } = req.body;
     const data = {
@@ -18,7 +19,7 @@ const signup = async (req, res) => {
     const user = await User.create(data);
 
     if (user) {
-      let token = jwt.sign({ id: user.id }, process.env.secretKey, {
+      let token = jwt.sign({ id: user.id }, process.env.SECRET_KEY!, {
         expiresIn: 1 * 21 * 60 * 60 * 1000,
       });
 
@@ -37,7 +38,7 @@ const signup = async (req, res) => {
 
 //login authentication
 
-const login = async (req, res) => {
+export const login = async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
 
@@ -51,7 +52,7 @@ const login = async (req, res) => {
       const isSame = await bcrypt.compare(password, user.password);
 
       if (isSame) {
-        let token = jwt.sign({ id: user.id }, process.env.secretKey, {
+        let token = jwt.sign({ id: user.id }, process.env.SECRET_KEY!, {
           expiresIn: 1 * 24 * 60 * 60 * 1000,
         });
 
@@ -69,9 +70,4 @@ const login = async (req, res) => {
   } catch (error) {
     console.log(error)
   }
-};
-
-module.exports = {
-    signup,
-    login,
 };

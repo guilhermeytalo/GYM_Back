@@ -1,8 +1,9 @@
+import { NextFunction, Request, Response } from 'express';
 import { db } from '../models';
 
 const User = db.users;
 
-export const saveUser = async (req,res, next) => {
+const saveUser = async (req: Request,res: Response, next: NextFunction) => {
     try{
         const userName = await User.findOne({
             where: {
@@ -30,6 +31,4 @@ export const saveUser = async (req,res, next) => {
     }
 }
 
-module.exports = {
-    saveUser,
-};
+export default saveUser;
