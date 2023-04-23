@@ -1,12 +1,11 @@
 import express, { NextFunction, Request, Response } from "express";
 import dotenv from "dotenv";
 import { Pool } from "pg"
-import { pollConfig } from "./env/environment";
 
 const app = express();
 dotenv.config();
 
-export const pool =  new Pool({  
+export const pool = new Pool({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
   database: process.env.DB_NAME,
