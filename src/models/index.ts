@@ -8,7 +8,7 @@ sequelize.authenticate().then(() => {
     console.log(err);
 });
 
-const db = {
+export const db = {
     Sequelize, 
     sequelize,
     users: require("./userModel")(sequelize, DataTypes),
