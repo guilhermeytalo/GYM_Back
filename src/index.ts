@@ -25,7 +25,6 @@ const connectToDB = async () => {
 
 connectToDB();
 
-
 //midldleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
