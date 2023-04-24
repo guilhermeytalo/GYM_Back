@@ -1,9 +1,10 @@
 import { NextFunction, Request, Response } from 'express';
-import { db } from '../models';
+import { db } from '../index';
 
-const User = db.users;
+export const User = db.users;
 
 const saveUser = async (req: Request,res: Response, next: NextFunction) => {
+    console.log('tem aqui?')
     try{
         const userName = await User.findOne({
             where: {

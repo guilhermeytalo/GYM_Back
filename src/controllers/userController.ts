@@ -1,7 +1,8 @@
-import { db } from '../models';
+
 import bcrypt from 'bcryptjs';
 import { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
+import { db } from '../index';
 
 const User = db.users;
 
