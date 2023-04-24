@@ -1,9 +1,16 @@
 import { DataTypes, Sequelize } from 'sequelize';
 
-const sequelize = new Sequelize(`postgres://postgres:123456@localhost:5432/discover`, {dialect: "postgres"});
+export const sequelize = new Sequelize({
+    host: 'db',
+    username: 'postgres',
+    database: 'gym',
+    password: '123456',
+    port: 5432,
+    dialect: 'postgres',
+});
 
-sequelize.authenticate().then(() => {
-    console.log(`Database connected to discovery`);
+sequelize.authenticate().then((res: any) => {
+    console.log(`Database connected to discovery ${res}`);
 }).catch((err) => {
     console.log(err);
 });
@@ -17,4 +24,4 @@ export const db = {
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
-db.users = require("./userModel")(sequelize, DataTypes);
+db.users = require('./userModel') (sequelize, DataTypes);

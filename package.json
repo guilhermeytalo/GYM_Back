@@ -9,8 +9,7 @@
     "build": "rimraf ./build && tsc",
     "dc:up": "docker-compose up",
     "dc:down": "docker-compose down",
-    "dc:build": "docker-compose build",
-    "create": "node src/data/onetable.ts createTables"
+    "dc:build": "docker-compose build"
   },
   "dependencies": {
     "@types/bcrypt": "^5.0.0",

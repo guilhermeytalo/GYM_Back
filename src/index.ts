@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 import { Pool } from "pg"
 import cookieParser from "cookie-parser";
 import userRoutes  from './routes/userRoutes'
-import { DataTypes, Sequelize } from 'sequelize';
+
 const app = express();
 dotenv.config();
 
@@ -23,36 +23,15 @@ const connectToDB = async () => {
   }
 }
 
-const sequelize = new Sequelize(`postgres://postgres:123456@localhost:5432/discover`, {dialect: "postgres"});
-
-sequelize.authenticate().then(() => {
-  console.log(`Database connected to discovery`);
-}).catch((err) => {
-  console.log(`Sequelize auth ${err}`);
-});
-
-export const db = {
-  Sequelize, 
-  sequelize,
-  users: require("./models/userModel")(sequelize, DataTypes),
-}
-
-db.Sequelize = Sequelize;
-db.sequelize = sequelize;
-
-db.users = require("./models/userModel")(sequelize, DataTypes);
-
 connectToDB();
 
 
 //midldleware
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-app.use('/api/users/login', userRoutes);
-
-app.use('/api/users/signup', userRoutes);
+app.use('/users', userRoutes);
 
 app.get("/test", (req: Request, res: Response, next: NextFunction) => {
   res.send("hi");
