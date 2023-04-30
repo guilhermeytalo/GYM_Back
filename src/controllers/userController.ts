@@ -62,12 +62,12 @@ export const login = async (req: Request, res: Response) => {
         console.log('user', JSON.stringify(user, null, 2));
         console.log(token);
 
-        return res.status(201).send(user);
+        return res.status(200).json(user);
       } else {
-        return res.status(401).send('Authentication failed');
+        return res.status(401).json({message: 'Authentication failed'});
       }
     } else {
-      return res.status(401).send('Authentication failed');
+      return res.status(401).json({message: 'Authentication failed'});
     }
   } catch (error) {
     console.log(error)

@@ -1,19 +1,14 @@
 import { DataTypes, Sequelize } from 'sequelize';
 
 export const sequelize = new Sequelize({
-    host: 'db',
-    username: 'postgres',
-    database: 'gym',
-    password: '123456',
-    port: 5432,
+    host:  process.env.DB_HOST,
+    username: process.env.DB_USER,
+    database: process.env.DB_NAME,
+    password: process.env.DB_PASSWORD,
+    port: parseInt(process.env.DB_PORT as string),
     dialect: 'postgres',
 });
 
-sequelize.authenticate().then((res: any) => {
-    console.log(`Database connected to discovery ${res}`);
-}).catch((err) => {
-    console.log(err);
-});
 
 export const db = {
     Sequelize, 

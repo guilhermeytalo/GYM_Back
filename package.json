@@ -5,8 +5,9 @@
   "license": "MIT",
   "scripts": {
     "start": "yarn build && node build/index.js",
-    "start:dev": "nodemon -L -e ts --exec \"yarn build && yarn start\"",
-    "build": "rimraf ./build && tsc",
+    "start:dev": "nodemon -L -e ts --exec \"yarn start\"",
+    "start:db": "docker-compose up db",
+    "build": "rimraf ./build && tsc && sequelize-cli db:migrate",
     "dc:up": "docker-compose up",
     "dc:down": "docker-compose down",
     "dc:build": "docker-compose build"

@@ -5,7 +5,6 @@ import {db}  from '../models/index';
 export const User = db.users;
 
 const saveUser = async (req: Request,res: Response, next: NextFunction) => {
-    console.log('tem aqui2?')
     try{
         const userName = await User.findOne({
             where: {
@@ -14,7 +13,7 @@ const saveUser = async (req: Request,res: Response, next: NextFunction) => {
         });
 
         if(userName) {
-            return res.json(409).send("Username already taken");
+            return res.status(400).json({message: "Username already taken"});
         }
 
         const emailCheck = await User.findOne({
@@ -24,7 +23,7 @@ const saveUser = async (req: Request,res: Response, next: NextFunction) => {
         })
 
         if(emailCheck) {
-            return res.json(409).send("Email already taken");
+            return res.status(400).json({message: "Email already taken"});
         }
 
         next();
