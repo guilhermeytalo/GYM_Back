@@ -10,7 +10,7 @@ In order to properly configure your development environment, it's important to m
 Locate your configuration file: Depending on your project setup, your configuration file may be named different things or located in different places. However, it is usually located in the root of your project directory and named something like config.json.
 ```
 - config
-	- config.json
+   - config.json
 - src
 ```
 
@@ -18,11 +18,11 @@ Locate your configuration file: Depending on your project setup, your configurat
 
 ```
 "development": {
-	"username": "yourdatabaseusername",
-	"password": "yourdatabasepassword",
-	"database": "yourdatabasename",
-	"host": "yourdatabasehost",
-	"dialect": "postgres"
+   "username": "yourdatabaseusername",
+   "password": "yourdatabasepassword",
+   "database": "yourdatabasename",
+   "host": "yourdatabasehost",
+   "dialect": "postgres"
 },
 ```
 
@@ -46,16 +46,11 @@ Locate your configuration file: Depending on your project setup, your configurat
 
 - Save and use: Save your changes to the .env file and begin using your development environment.
 
-## <bold>TODO<bold>
-<div>
+## TODO
 - [x] Create a login route 
 - [ ] Create refresh token
 - [ ] Create revoke login token
 - [x] Create a register route 
 - [ ] Create a logout route
-
-</div>
-
-  
 
 Note: Be sure to keep your .env file secure and never share it publicly, as it may contain sensitive information such as API keys or database credentials.
