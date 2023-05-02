@@ -6,6 +6,7 @@ import { db } from '../models/index';
 
 
 const User = db.users;
+const tokenList: any = {};
 
 //signing a user up
 
@@ -59,15 +60,55 @@ export const login = async (req: Request, res: Response) => {
         });
 
         res.cookie('jwt', token, { maxAge: 1 * 24 * 60 * 60, httpOnly: true });
-        console.log('user', JSON.stringify(user, null, 2));
-        console.log(token);
+        // console.log('user', JSON.stringify(user, null, 2));
+        // console.log(token);
+        
+        let refreshToken = jwt.sign({ id: user.id }, process.env.SECRET_KEY!,  { expiresIn: `${process.env.TOKEN_LIFE!}`});
 
-        return res.status(200).json(user);
+        const response = {
+          "token": token,
+          "refreshToken": refreshToken,
+          "user": user,
+        }
+
+        tokenList[refreshToken] = response;
+        console.log('é um token?', tokenList);
+        return res.status(200).json(response);
       } else {
         return res.status(401).json({message: 'Authentication failed'});
       }
     } else {
       return res.status(401).json({message: 'Authentication failed'});
+    }
+  } catch (error) {
+    console.log(error)
+  }
+};
+
+// Refresh  token
+
+export const refreshToken = async (req: Request, res: Response) => {
+  try {
+    const postData = req.body;
+    console.log('postData', postData);
+
+    if((postData.refreshToken) && (postData.refreshToken in tokenList)) {
+      const user = {
+        "id": postData.id,
+        "email": postData.email,
+        "userName": postData.userName,
+      }
+
+      const token = jwt.sign({id: user.id}, process.env.SECRET_KEY!, {expiresIn: `${process.env.TOKEN_LIFE!}`});
+
+      const response = {
+        "token": token,
+      }
+
+      tokenList[postData.refreshToken].token = token;
+      res.status(200).json(response);;
+    } else {
+      res.status(404).send('Invalid request');
     }
   } catch (error) {
     console.log(error)
