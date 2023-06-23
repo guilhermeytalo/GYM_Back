@@ -8,7 +8,7 @@ import { db } from '../models/index';
 const User = db.users;
 const tokenList: any = {};
 
-//signing a user up
+// Create a new user
 
 export const signup = async (req: Request, res: Response) => {
   try {
@@ -109,6 +109,34 @@ export const refreshToken = async (req: Request, res: Response) => {
       res.status(200).json(response);;
     } else {
       res.status(404).send('Invalid request');
+    }
+  } catch (error) {
+    console.log(error)
+  }
+};
+
+// Delete User
+
+export const deleteUser = async (req: Request, res: Response) => {
+  // delete user by email
+  try{
+    const { email } = req.body;
+    const user = await User.findOne({
+      where: {
+        email: email,
+      },
+    });
+
+    if(user) {
+      await User.destroy({
+        where: {
+          email: email,
+        },
+      });
+
+      return res.status(200).send('User deleted');
+    } else {
+      return res.status(404).send('User not found');
     }
   } catch (error) {
     console.log(error)
