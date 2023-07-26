@@ -1,4 +1,4 @@
-import {DataTypes, Sequelize} from 'sequelize';
+import { DataTypes, Sequelize } from 'sequelize';
 
 interface UserProps {
   userName: string;
@@ -7,7 +7,7 @@ interface UserProps {
 }
 
 module.exports = (sequelize: Sequelize) => {
-  return sequelize.define(
+  const User = sequelize.define(
     'User',
     {
       userName: {
@@ -27,6 +27,8 @@ module.exports = (sequelize: Sequelize) => {
         allowNull: false,
       },
     },
-    {timestamps: true}
+    { timestamps: true }
   );
+
+  return User;
 };
