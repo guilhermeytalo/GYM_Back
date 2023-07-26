@@ -47,10 +47,17 @@ Locate your configuration file: Depending on your project setup, your configurat
 - Save and use: Save your changes to the .env file and begin using your development environment.
 
 ## TODO
-- [x] Create a login route 
-- [ ] Create refresh token
-- [ ] Create revoke login token
-- [x] Create a register route 
-- [ ] Create a logout route
+- [ ] Routes
+  - [x] Check API
+  - [x] Login route 
+  - [x] Refresh token for login
+  - [ ] revoke token for login
+  - [ ] Logout route
+- [ ] Create
+  - [x] Create New User 
+- [ ] Update
+- [ ] Delete
+  - [x] Delete user
+
 
 Note: Be sure to keep your .env file secure and never share it publicly, as it may contain sensitive information such as API keys or database credentials.

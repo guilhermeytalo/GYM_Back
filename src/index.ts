@@ -2,6 +2,7 @@ import express, { NextFunction, Request, Response } from 'express';
 import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
 
+const cors = require('cors');
 const app = express();
 dotenv.config();
 import userRoutes from './routes/userRoutes';
@@ -20,7 +21,8 @@ const connectToDB = async () => {
 
 connectToDB();
 
-//midldleware
+// middleware
+app.use(cors())
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());

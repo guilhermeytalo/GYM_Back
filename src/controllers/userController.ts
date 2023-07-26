@@ -1,8 +1,7 @@
-
 import bcrypt from 'bcryptjs';
-import { Request, Response } from 'express';
+import {Request, Response} from 'express';
 import jwt from 'jsonwebtoken';
-import { db } from '../models/index';
+import {db} from '../models';
 
 
 const User = db.users;
@@ -12,7 +11,7 @@ const tokenList: any = {};
 
 export const signup = async (req: Request, res: Response) => {
   try {
-    const { userName, email, password } = req.body;
+    const {userName, email, password} = req.body;
     const data = {
       userName,
       email,
@@ -22,11 +21,11 @@ export const signup = async (req: Request, res: Response) => {
     const user = await User.create(data);
 
     if (user) {
-      let token = jwt.sign({ id: user.id }, process.env.SECRET_KEY!, {
-        expiresIn: 1 * 21 * 60 * 60 * 1000,
+      let token = jwt.sign({id: user.id}, process.env.SECRET_KEY!, {
+        expiresIn: 21 * 60 * 60 * 1000,
       });
 
-      res.cookie('jwt', token, { maxAge: 1 * 24 * 60 * 60, httpOnly: true });
+      res.cookie('jwt', token, {maxAge: 24 * 60 * 60, httpOnly: true});
       console.log('user', JSON.stringify(user, null, 2));
       console.log(token);
 
@@ -43,7 +42,7 @@ export const signup = async (req: Request, res: Response) => {
 
 export const login = async (req: Request, res: Response) => {
   try {
-    const { email, password } = req.body;
+    const {email, password} = req.body;
 
     const user = await User.findOne({
       where: {
@@ -55,15 +54,15 @@ export const login = async (req: Request, res: Response) => {
       const isSame = await bcrypt.compare(password, user.password);
 
       if (isSame) {
-        let token = jwt.sign({ id: user.id }, process.env.SECRET_KEY!, {
-          expiresIn: 1 * 24 * 60 * 60 * 1000,
+        let token = jwt.sign({id: user.id}, process.env.SECRET_KEY!, {
+          expiresIn: 24 * 60 * 60 * 1000,
         });
 
-        res.cookie('jwt', token, { maxAge: 1 * 24 * 60 * 60, httpOnly: true });
+        res.cookie('jwt', token, {maxAge: 24 * 60 * 60, httpOnly: true});
         // console.log('user', JSON.stringify(user, null, 2));
         // console.log(token);
-        
-        let refreshToken = jwt.sign({ id: user.id }, process.env.SECRET_KEY!,  { expiresIn: `${process.env.TOKEN_LIFE!}`});
+
+        let refreshToken = jwt.sign({id: user.id}, process.env.SECRET_KEY!, {expiresIn: `${process.env.TOKEN_LIFE!}`});
 
         const response = {
           "token": token,
@@ -92,7 +91,7 @@ export const refreshToken = async (req: Request, res: Response) => {
     const postData = req.body;
     console.log('postData', postData);
 
-    if((postData.refreshToken) && (postData.refreshToken in tokenList)) {
+    if ((postData.refreshToken) && (postData.refreshToken in tokenList)) {
       const user = {
         "id": postData.id,
         "email": postData.email,
@@ -106,7 +105,8 @@ export const refreshToken = async (req: Request, res: Response) => {
       }
 
       tokenList[postData.refreshToken].token = token;
-      res.status(200).json(response);;
+      res.status(200).json(response);
+
     } else {
       res.status(404).send('Invalid request');
     }
@@ -119,15 +119,15 @@ export const refreshToken = async (req: Request, res: Response) => {
 
 export const deleteUser = async (req: Request, res: Response) => {
   // delete user by email
-  try{
-    const { email } = req.body;
+  try {
+    const {email} = req.body;
     const user = await User.findOne({
       where: {
         email: email,
       },
     });
 
-    if(user) {
+    if (user) {
       await User.destroy({
         where: {
           email: email,
