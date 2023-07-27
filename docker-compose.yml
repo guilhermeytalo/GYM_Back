@@ -10,6 +10,8 @@ services:
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules/
+      - ./config:/usr/src/app/config/
+      - ./models:/usr/src/app/models/
 
   db:
     container_name: postgres
