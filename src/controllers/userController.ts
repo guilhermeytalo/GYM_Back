@@ -1,9 +1,9 @@
 import bcrypt from 'bcryptjs';
-import {Request, Response} from 'express';
+import { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
-import {db} from '../models';
+import { db } from '../models';
 
-export class User {
+export type IUser = {
   id: number;
   name: string;
   email: string;
@@ -13,13 +13,11 @@ export class User {
 const User = db.users;
 const tokenList: any = {};
 
-
-
 // Create a new user
 
 export const signup = async (req: Request, res: Response) => {
   try {
-    const {userName, email, password} = req.body;
+    const { userName, email, password } = req.body;
     const data = {
       userName,
       email,
@@ -29,11 +27,11 @@ export const signup = async (req: Request, res: Response) => {
     const user = await User.create(data);
 
     if (user) {
-      let token = jwt.sign({id: user.id}, process.env.SECRET_KEY!, {
+      let token = jwt.sign({ id: user.id }, process.env.SECRET_KEY!, {
         expiresIn: '30d',
       });
 
-      res.cookie('jwt', token, {maxAge: 1 * 24 * 60 * 60, httpOnly: true});
+      res.cookie('jwt', token, { maxAge: 1 * 24 * 60 * 60, httpOnly: true });
       console.log('user', JSON.stringify(user, null, 2));
       console.log(token);
 
@@ -50,7 +48,7 @@ export const signup = async (req: Request, res: Response) => {
 
 export const login = async (req: Request, res: Response) => {
   try {
-    const {email, password} = req.body;
+    const { email, password } = req.body;
 
     const user = await User.findOne({
       where: {
@@ -62,33 +60,35 @@ export const login = async (req: Request, res: Response) => {
       const isSame = await bcrypt.compare(password, user.password);
 
       if (isSame) {
-        let token = jwt.sign({id: user.id}, process.env.SECRET_KEY!, {
+        let token = jwt.sign({ id: user.id }, process.env.SECRET_KEY!, {
           expiresIn: '30d',
         });
 
-        res.cookie('jwt', token, {maxAge: 1 * 24 * 60 * 60, httpOnly: true});
+        res.cookie('jwt', token, { maxAge: 1 * 24 * 60 * 60, httpOnly: true });
         // console.log('user', JSON.stringify(user, null, 2));
         // console.log(token);
 
-        let refreshToken = jwt.sign({id: user.id}, process.env.SECRET_KEY!, {expiresIn: '30d'});
+        let refreshToken = jwt.sign({ id: user.id }, process.env.SECRET_KEY!, {
+          expiresIn: '30d',
+        });
 
         const response = {
-          "token": token,
-          "refreshToken": refreshToken,
-          "user": user,
-        }
+          token: token,
+          refreshToken: refreshToken,
+          user: user,
+        };
 
         tokenList[refreshToken] = response;
-        
+
         return res.status(200).json(response);
       } else {
-        return res.status(401).json({message: 'Authentication failed'});
+        return res.status(401).json({ message: 'Authentication failed' });
       }
     } else {
-      return res.status(401).json({message: 'Authentication failed'});
+      return res.status(401).json({ message: 'Authentication failed' });
     }
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
 };
 
@@ -99,27 +99,28 @@ export const refreshToken = async (req: Request, res: Response) => {
     const postData = req.body;
     console.log('postData', postData);
 
-    if ((postData.refreshToken) && (postData.refreshToken in tokenList)) {
+    if (postData.refreshToken && postData.refreshToken in tokenList) {
       const user = {
-        "id": postData.id,
-        "email": postData.email,
-        "userName": postData.userName,
-      }
+        id: postData.id,
+        email: postData.email,
+        userName: postData.userName,
+      };
 
-      const token = jwt.sign({id: user.id}, process.env.SECRET_KEY!, {expiresIn: '30d'});
+      const token = jwt.sign({ id: user.id }, process.env.SECRET_KEY!, {
+        expiresIn: '30d',
+      });
 
       const response = {
-        "token": token,
-      }
+        token: token,
+      };
 
       tokenList[postData.refreshToken].token = token;
       res.status(200).json(response);
-
     } else {
       res.status(404).send('Invalid request');
     }
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
 };
 
@@ -128,7 +129,7 @@ export const refreshToken = async (req: Request, res: Response) => {
 export const deleteUser = async (req: Request, res: Response) => {
   // delete user by email
   try {
-    const {email} = req.body;
+    const { email } = req.body;
     const user = await User.findOne({
       where: {
         email: email,
@@ -147,7 +148,7 @@ export const deleteUser = async (req: Request, res: Response) => {
       return res.status(404).send('User not found');
     }
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
 };
 
@@ -156,12 +157,17 @@ export const showAllUsers = async (req: Request, res: Response) => {
   try {
     const users = await User.findAll();
 
-    const result = users.map(({ password, ...userData }) => ({
-      ...userData,
-      password: undefined
-    }));
+    const result = users.map(
+      (user: IUser) => { 
+        return {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+        };
+      }
+    );
     return res.status(200).send(result);
   } catch (error) {
     console.log(error);
   }
-}
+};
