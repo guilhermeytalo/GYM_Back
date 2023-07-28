@@ -53,6 +53,7 @@ Locate your configuration file: Depending on your project setup, your configurat
   - [x] Refresh token for login
   - [ ] revoke token for login
   - [ ] Logout route
+  - [x] List All Users
 - [ ] Create
   - [x] Create New User 
 - [ ] Update
