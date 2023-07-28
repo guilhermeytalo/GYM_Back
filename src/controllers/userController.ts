@@ -5,7 +5,7 @@ import { db } from '../models';
 
 export type IUser = {
   id: number;
-  name: string;
+  userName: string;
   email: string;
   password: string;
 }
@@ -161,7 +161,7 @@ export const showAllUsers = async (req: Request, res: Response) => {
       (user: IUser) => { 
         return {
           id: user.id,
-          userName: user.name,
+          userName: user.userName,
           email: user.email,
         };
       }
