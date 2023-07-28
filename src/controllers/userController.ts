@@ -142,3 +142,13 @@ export const deleteUser = async (req: Request, res: Response) => {
     console.log(error)
   }
 };
+
+// Show All Users
+export const showAllUsers = async (req: Request, res: Response) => {
+  try {
+    const users = await User.findAll();
+    return res.status(200).send(users);
+  } catch (error) {
+    console.log(error)
+  }
+}
