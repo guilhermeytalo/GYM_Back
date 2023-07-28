@@ -71,7 +71,7 @@ export const login = async (req: Request, res: Response) => {
         }
 
         tokenList[refreshToken] = response;
-        console.log('é um token?', tokenList);
+        
         return res.status(200).json(response);
       } else {
         return res.status(401).json({message: 'Authentication failed'});
