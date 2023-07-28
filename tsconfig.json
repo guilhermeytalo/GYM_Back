@@ -107,12 +107,12 @@
     "skipLibCheck": true                                /* Skip type checking all .d.ts files. */
   },
   "include": [
-    "./**/*"
+    "./src"
   ],
   "exclude": [
     "node_modules",
     "build",
-    "migrations",
+    "database/migrations",
     "models",
     "seeders"
   ]

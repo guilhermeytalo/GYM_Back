@@ -7,19 +7,19 @@ WORKDIR /usr/src/app
 
 
 # Copies package.json, package-lock.json, tsconfig.json, .env to the root of WORKDIR
-COPY ["package.json", "yarn.lock", "tsconfig.json", ".env", "./"]
+COPY ["package.json", "yarn.lock", "tsconfig.json", ".sequelizerc", ".env", "/"]
+
+# Copies everything in the src directory to WORKDIR/src
+COPY ./ ./
 
 # Installs all packages
 RUN yarn install
 
-# Run the following command to build the image
-RUN yarn build
-
 # Run migration
 RUN yarn db:migration
 
-# Copies everything in the src directory to WORKDIR/src
-COPY ./src ./src
+# Run the following command to build the image
+RUN yarn build
 
 # Runs the dev npm script to build & start the server
 CMD yarn start
