@@ -3,9 +3,17 @@ import {Request, Response} from 'express';
 import jwt from 'jsonwebtoken';
 import {db} from '../models';
 
+export class User {
+  id: number;
+  name: string;
+  email: string;
+  password: string;
+}
 
 const User = db.users;
 const tokenList: any = {};
+
+
 
 // Create a new user
 
