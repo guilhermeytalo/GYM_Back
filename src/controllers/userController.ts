@@ -161,7 +161,7 @@ export const showAllUsers = async (req: Request, res: Response) => {
       (user: IUser) => { 
         return {
           id: user.id,
-          name: user.name,
+          userName: user.name,
           email: user.email,
         };
       }
