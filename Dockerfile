@@ -12,8 +12,14 @@ COPY ["package.json", "yarn.lock", "tsconfig.json", ".env", "./"]
 # Installs all packages
 RUN yarn install
 
+# Run the following command to build the image
+RUN yarn build
+
+# Run migration
+RUN yarn db:migration
+
 # Copies everything in the src directory to WORKDIR/src
 COPY ./src ./src
 
 # Runs the dev npm script to build & start the server
-CMD yarn start:dev
+CMD yarn start

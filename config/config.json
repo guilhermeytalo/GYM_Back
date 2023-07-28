@@ -1,23 +1,29 @@
 {
   "development": {
-    "username": "postgres",
-    "password": "123456",
-    "database": "gym",
-    "host": "localhost",
-    "dialect": "postgres"
+    "username": "gym_ixtv_user",
+    "password": "QO8bqIRqOK9JNTlpv8uj0xrKxK1pS04p",
+    "database": "gym_ixtv",
+    "host": "dpg-cj0tn4dph6enmk6c2ugg-a.oregon-postgres.render.com",
+    "dialect": "postgres",
+    "dialectOptions": {
+      "ssl": {
+        "require": true,
+        "rejectUnauthorized": false
+      }
+    }
   },
   "test": {
-    "username": "root",
-    "password": null,
-    "database": "database_test",
-    "host": "127.0.0.1",
+    "username": "admin",
+    "password": "admin",
+    "database": "gym_ixtv",
+    "host": "dpg-cj0tn4dph6enmk6c2ugg-a.oregon-postgres.render.com",
     "dialect": "postgres"
   },
   "production": {
-    "username": "root",
-    "password": null,
-    "database": "database_production",
-    "host": "127.0.0.1",
+    "username": "admin",
+    "password": "admin",
+    "database": "gym_ixtv",
+    "host": "dpg-cj0tn4dph6enmk6c2ugg-a.oregon-postgres.render.com",
     "dialect": "postgres"
   }
 }
