@@ -148,9 +148,12 @@ export const showAllUsers = async (req: Request, res: Response) => {
   try {
     const users = await User.findAll();
 
-    const result = users.map(({ password, ...userData }) => ({ ...userData }));
+    const result = users.map(({ password, ...userData }) => ({
+      ...userData,
+      password: undefined
+    }));
     return res.status(200).send(result);
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
 }
