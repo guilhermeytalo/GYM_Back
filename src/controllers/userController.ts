@@ -22,10 +22,10 @@ export const signup = async (req: Request, res: Response) => {
 
     if (user) {
       let token = jwt.sign({id: user.id}, process.env.SECRET_KEY!, {
-        expiresIn: 2592000,
+        expiresIn: '30d',
       });
 
-      res.cookie('jwt', token, {maxAge: 2592000, httpOnly: true});
+      res.cookie('jwt', token, {maxAge: 1 * 24 * 60 * 60, httpOnly: true});
       console.log('user', JSON.stringify(user, null, 2));
       console.log(token);
 
@@ -55,10 +55,10 @@ export const login = async (req: Request, res: Response) => {
 
       if (isSame) {
         let token = jwt.sign({id: user.id}, process.env.SECRET_KEY!, {
-          expiresIn: 24 * 60 * 60 * 1000,
+          expiresIn: '30d',
         });
 
-        res.cookie('jwt', token, {maxAge: 24 * 60 * 60, httpOnly: true});
+        res.cookie('jwt', token, {maxAge: 1 * 24 * 60 * 60, httpOnly: true});
         // console.log('user', JSON.stringify(user, null, 2));
         // console.log(token);
 
