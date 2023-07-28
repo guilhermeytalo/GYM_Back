@@ -62,7 +62,7 @@ export const login = async (req: Request, res: Response) => {
         // console.log('user', JSON.stringify(user, null, 2));
         // console.log(token);
 
-        let refreshToken = jwt.sign({id: user.id}, process.env.SECRET_KEY!, {expiresIn: `${process.env.TOKEN_LIFE!}`});
+        let refreshToken = jwt.sign({id: user.id}, process.env.SECRET_KEY!, {expiresIn: '30d'});
 
         const response = {
           "token": token,
@@ -98,7 +98,7 @@ export const refreshToken = async (req: Request, res: Response) => {
         "userName": postData.userName,
       }
 
-      const token = jwt.sign({id: user.id}, process.env.SECRET_KEY!, {expiresIn: `${process.env.TOKEN_LIFE!}`});
+      const token = jwt.sign({id: user.id}, process.env.SECRET_KEY!, {expiresIn: '30d'});
 
       const response = {
         "token": token,
