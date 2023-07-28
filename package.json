@@ -7,7 +7,7 @@
     "start": "yarn build && node build/index.js",
     "start:dev": "nodemon -L -e ts --exec \"yarn start\"",
     "start:db": "docker-compose up db",
-    "build": "rimraf ./build && ( sequelize-cli init || echo 'Skipping sequelize-cli init' ) && tsc",
+    "build": "rimraf ./build && tsc",
     "dc:up": "docker-compose up",
     "dc:down": "docker-compose down",
     "dc:build": "docker-compose build"
