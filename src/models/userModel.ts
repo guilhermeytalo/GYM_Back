@@ -10,6 +10,11 @@ module.exports = (sequelize: Sequelize) => {
   return sequelize.define(
     'User',
     {
+      id: {
+        type: DataTypes.UUIDV4,
+        autoIncrement: true,
+        primaryKey: true,
+      },
       userName: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -27,6 +32,6 @@ module.exports = (sequelize: Sequelize) => {
         allowNull: false,
       },
     },
-    {timestamps: true}
+    {timestamps: true, tableName: 'users'}
   );
 };
