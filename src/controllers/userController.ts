@@ -147,7 +147,9 @@ export const deleteUser = async (req: Request, res: Response) => {
 export const showAllUsers = async (req: Request, res: Response) => {
   try {
     const users = await User.findAll();
-    return res.status(200).send(users);
+
+    const result = users.map(({ password, ...userData }) => ({ ...userData }));
+    return res.status(200).send(result);
   } catch (error) {
     console.log(error)
   }
