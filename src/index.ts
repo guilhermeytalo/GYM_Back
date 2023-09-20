@@ -1,34 +1,36 @@
-import express, { NextFunction, Request, Response } from 'express';
-import dotenv from 'dotenv';
-import cookieParser from 'cookie-parser';
+import express, { NextFunction, Request, Response } from "express";
+import dotenv from "dotenv";
+import { Pool } from "pg"
+import cookieParser from "cookie-parser";
 
 const app = express();
 dotenv.config();
-import userRoutes from './routes/userRoutes';
-import { sequelize } from './models';
+
+export const pool = new Pool({
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  database: process.env.DB_NAME,
+  password: process.env.DB_PASSWORD,
+  port: parseInt(process.env.DB_PORT as string),
+});
 
 const connectToDB = async () => {
-  await sequelize
-    .authenticate()
-    .then((res: any) => {
-      console.log(`Database connected to discovery ${res}`);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-};
+  try {
+    await pool.connect()
+  } catch (err) {
+    console.log(err);
+  }
+}
 
 connectToDB();
 
 //midldleware
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-app.use('/users', userRoutes);
-
-app.get('/test', (req: Request, res: Response, next: NextFunction) => {
-  res.send('hi');
+app.get("/test", (req: Request, res: Response, next: NextFunction) => {
+  res.send("hi");
 });
 
 app.listen(process.env.PORT, () => {

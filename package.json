@@ -13,6 +13,7 @@
     "dc:build": "docker-compose build"
   },
   "dependencies": {
+    "@prisma/client": "5.3.1",
     "@types/bcrypt": "^5.0.0",
     "@types/bcryptjs": "^2.4.2",
     "@types/cookie-parser": "^1.4.3",
@@ -33,6 +34,7 @@
     "typescript": "^5.0.4"
   },
   "devDependencies": {
+    "prisma": "^5.3.1",
     "sequelize-cli": "^6.6.0"
   }
 }
