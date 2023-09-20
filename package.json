@@ -4,7 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "start": "node build/index.js",
+    "start": "yarn build && node build/index.js",
     "start:dev": "nodemon -L -e ts --exec \"yarn start\"",
     "start:db": "docker-compose up db",
     "build": "rimraf ./build && tsc && prisma generate",
