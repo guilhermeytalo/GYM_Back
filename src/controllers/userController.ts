@@ -1,24 +1,21 @@
-
 import bcrypt from 'bcryptjs';
 import { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
-import { db } from '../models/index';
+import { User } from '../utils/database';
 
-
-const User = db.users;
-
-//signing a user up
-
+// Signing a user up
 export const signup = async (req: Request, res: Response) => {
   try {
     const { userName, email, password } = req.body;
-    const data = {
-      userName,
-      email,
-      password: await bcrypt.hash(password, 10),
-    };
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-    const user = await User.create(data);
+    const user = await User.create({
+      data: {
+        userName,
+        email,
+        password: hashedPassword,
+      },
+    });
 
     if (user) {
       let token = jwt.sign({ id: user.id }, process.env.SECRET_KEY!, {
@@ -38,13 +35,12 @@ export const signup = async (req: Request, res: Response) => {
   }
 };
 
-//login authentication
-
+// Login authentication
 export const login = async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
 
-    const user = await User.findOne({
+    const user = await User.findFirst({
       where: {
         email: email,
       },
@@ -64,12 +60,12 @@ export const login = async (req: Request, res: Response) => {
 
         return res.status(200).json(user);
       } else {
-        return res.status(401).json({message: 'Authentication failed'});
+        return res.status(401).json({ message: 'Authentication failed' });
       }
     } else {
-      return res.status(401).json({message: 'Authentication failed'});
+      return res.status(401).json({ message: 'Authentication failed' });
     }
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
 };
