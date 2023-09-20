@@ -3,6 +3,15 @@ import { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import { User } from '../utils/database';
 
+export type IUser = {
+  id: number;
+  userName: string;
+  email: string;
+  password: string;
+}
+
+const tokenList: any = {};
+
 // Signing a user up
 export const signup = async (req: Request, res: Response) => {
   try {
@@ -65,6 +74,86 @@ export const login = async (req: Request, res: Response) => {
     } else {
       return res.status(401).json({ message: 'Authentication failed' });
     }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+// Refresh  token
+
+export const refreshToken = async (req: Request, res: Response) => {
+  try {
+    const postData = req.body;
+    console.log('postData', postData);
+
+    if (postData.refreshToken && postData.refreshToken in tokenList) {
+      const user = {
+        id: postData.id,
+        email: postData.email,
+        userName: postData.userName,
+      };
+
+      const token = jwt.sign({ id: user.id }, process.env.SECRET_KEY!, {
+        expiresIn: '30d',
+      });
+
+      const response = {
+        token: token,
+      };
+
+      tokenList[postData.refreshToken].token = token;
+      res.status(200).json(response);
+    } else {
+      res.status(404).send('Invalid request');
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+// Delete User
+
+export const deleteUser = async (req: Request, res: Response) => {
+  // delete user by email
+  try {
+    const { email } = req.body;
+    const user = await User.findUnique({
+      where: {
+        email: email,
+      },
+    });
+
+    if (user) {
+      await User.delete({
+        where: {
+          email: email,
+        },
+      });
+
+      return res.status(200).send('User deleted');
+    } else {
+      return res.status(404).send('User not found');
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+// Show All Users
+export const showAllUsers = async (req: Request, res: Response) => {
+  try {
+    const users = await User.findMany();
+
+    const result = users.map(
+      (user: IUser) => { 
+        return {
+          id: user.id,
+          userName: user.userName,
+          email: user.email,
+        };
+      }
+    );
+    return res.status(200).send(result);
   } catch (error) {
     console.log(error);
   }
