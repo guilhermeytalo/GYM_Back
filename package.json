@@ -7,13 +7,13 @@
     "start": "node build/index.js",
     "start:dev": "nodemon -L -e ts --exec \"yarn start\"",
     "start:db": "docker-compose up db",
-    "build": "tsc",
-    "db:migration": "sequelize-cli db:migrate",
+    "build": "rimraf ./build && tsc && prisma generate",
     "dc:up": "docker-compose up",
     "dc:down": "docker-compose down",
     "dc:build": "docker-compose build"
   },
   "dependencies": {
+    "@prisma/client": "^5.3.1",
     "@types/bcrypt": "^5.0.0",
     "@types/bcryptjs": "^2.4.2",
     "@types/cookie-parser": "^1.4.3",
@@ -35,6 +35,7 @@
     "typescript": "^5.0.4"
   },
   "devDependencies": {
+    "prisma": "^5.3.1",
     "sequelize-cli": "^6.6.0"
   },
   "engines": {

@@ -1,38 +1,30 @@
-import express, { NextFunction, Request, Response } from 'express';
-import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
+import dotenv from 'dotenv';
+import express, { NextFunction, Request, Response } from 'express';
+import { prisma } from './utils/database';
+import userRoutes from './routes/userRoutes';
 
-const cors = require('cors');
 const app = express();
 dotenv.config();
-import userRoutes from './routes/userRoutes';
-import { sequelize } from './models';
 
-const connectToDB = async () => {
-  await sequelize
-    .authenticate()
-    .then((res: any) => {
-      console.log(`Database connected to discovery ${res}`);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-};
 
-connectToDB();
 
-// middleware
-app.use(cors())
+// Middleware
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-
-app.use('/users', userRoutes);
 
 app.get('/test', (req: Request, res: Response, next: NextFunction) => {
   res.send('hi');
 });
 
+app.use('/users', userRoutes);
+
 app.listen(process.env.PORT, () => {
   console.log(`Server is running at ${process.env.PORT}`);
+});
+
+// This function ensures that the Prisma Client disconnects when the Node.js process exits.
+process.on('beforeExit', async () => {
+  await prisma.$disconnect();
 });

@@ -1,24 +1,31 @@
 import bcrypt from 'bcryptjs';
 import {Request, Response} from 'express';
 import jwt from 'jsonwebtoken';
-import {db} from '../models';
+import { User } from '../utils/database';
 
+export type IUser = {
+  id: number;
+  userName: string;
+  email: string;
+  password: string;
+}
 
-const User = db.users;
 const tokenList: any = {};
 
 // Create a new user
 
 export const signup = async (req: Request, res: Response) => {
   try {
-    const {userName, email, password} = req.body;
-    const data = {
-      userName,
-      email,
-      password: await bcrypt.hash(password, 10),
-    };
+    const { userName, email, password } = req.body;
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-    const user = await User.create(data);
+    const user = await User.create({
+      data: {
+        userName,
+        email,
+        password: hashedPassword,
+      },
+    });
 
     if (user) {
       let token = jwt.sign({id: user.id}, process.env.SECRET_KEY!, {
@@ -38,13 +45,12 @@ export const signup = async (req: Request, res: Response) => {
   }
 };
 
-//login authentication
-
+// Login authentication
 export const login = async (req: Request, res: Response) => {
   try {
     const {email, password} = req.body;
 
-    const user = await User.findOne({
+    const user = await User.findFirst({
       where: {
         email: email,
       },
@@ -74,13 +80,33 @@ export const login = async (req: Request, res: Response) => {
         
         return res.status(200).json(response);
       } else {
-        return res.status(401).json({message: 'Authentication failed'});
+        return res.status(401).json({ message: 'Authentication failed' });
       }
     } else {
-      return res.status(401).json({message: 'Authentication failed'});
+      return res.status(401).json({ message: 'Authentication failed' });
     }
   } catch (error) {
-    console.log(error)
+    console.log(error);
+  }
+};
+
+// Show All Users
+export const showAllUsers = async (req: Request, res: Response) => {
+  try {
+    const users = await User.findMany();
+
+    const result = users.map(
+      (user: IUser) => { 
+        return {
+          id: user.id,
+          userName: user.userName,
+          email: user.email,
+        };
+      }
+    );
+    return res.status(200).send(result);
+  } catch (error) {
+    console.log(error);
   }
 };
 
@@ -121,14 +147,14 @@ export const deleteUser = async (req: Request, res: Response) => {
   // delete user by email
   try {
     const {email} = req.body;
-    const user = await User.findOne({
+    const user = await User.findUnique({
       where: {
         email: email,
       },
     });
 
     if (user) {
-      await User.destroy({
+      await User.delete({
         where: {
           email: email,
         },
@@ -139,6 +165,6 @@ export const deleteUser = async (req: Request, res: Response) => {
       return res.status(404).send('User not found');
     }
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
 };
