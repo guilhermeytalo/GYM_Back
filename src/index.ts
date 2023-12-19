@@ -7,8 +7,6 @@ import userRoutes from './routes/userRoutes';
 const app = express();
 dotenv.config();
 
-
-// teste teste
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
